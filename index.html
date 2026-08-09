@@ -70,7 +70,25 @@
   display: inline-block;
 }
 .links-row a:hover { text-decoration: underline; }
-
+section.ask { padding: 10px 0 50px; }
+.ask-box { display: flex; gap: 8px; flex-wrap: wrap; }
+.ask-box input {
+  flex: 1; min-width: 200px;
+  padding: 12px 14px;
+  border: 1px solid #ECECEA;
+  border-radius: 10px;
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+}
+.ask-box button { border: none; cursor: pointer; }
+.ask-answer {
+  margin-top: 14px;
+  font-size: 14.5px;
+  background: #F5F5F4;
+  border-radius: 10px;
+  padding: 14px 16px;
+  min-height: 20px;
+}
   h2.section-title {
     font-size: 13px;
     letter-spacing: 1.5px;
@@ -174,7 +192,16 @@
     
   </div>
 </section>
-
+<section class="ask">
+  <div class="wrap">
+    <h2 class="section-title">Ask about my work</h2>
+    <div class="ask-box">
+      <input type="text" id="ask-input" placeholder="e.g. Has he worked with real clients?" maxlength="200">
+      <button id="ask-btn" class="cta">Ask</button>
+    </div>
+    <p id="ask-answer" class="ask-answer"></p>
+  </div>
+</section>
 <section class="projects">
   <div class="wrap">
     <h2 class="section-title">Projects</h2>
@@ -245,6 +272,28 @@
 </section>
 
 <footer>&copy; 2026 Arthur Davino</footer>
+<script>
+  const askBtn = document.getElementById('ask-btn');
+  const askInput = document.getElementById('ask-input');
+  const askAnswer = document.getElementById('ask-answer');
+  const ASK_URL = 'https://davino-ask-api.vercel.app/api/ask';
 
+  askBtn.addEventListener('click', async () => {
+    const question = askInput.value.trim();
+    if (!question) return;
+    askAnswer.textContent = 'Thinking...';
+    try {
+      const res = await fetch(ASK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question }),
+      });
+      const data = await res.json();
+      askAnswer.textContent = data.answer || 'Sorry, something went wrong.';
+    } catch (err) {
+      askAnswer.textContent = 'Sorry, something went wrong.';
+    }
+  });
+</script>
 </body>
 </html>
