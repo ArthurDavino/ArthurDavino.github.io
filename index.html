@@ -273,12 +273,13 @@ section.ask { padding: 10px 0 50px; }
 
 <footer>&copy; 2026 Arthur Davino</footer>
 <script>
+  <script>
   const askBtn = document.getElementById('ask-btn');
   const askInput = document.getElementById('ask-input');
   const askAnswer = document.getElementById('ask-answer');
   const ASK_URL = 'https://davino-ask-api.vercel.app/api/ask';
 
-  askBtn.addEventListener('click', async () => {
+  async function askQuestion() {
     const question = askInput.value.trim();
     if (!question) return;
     askAnswer.textContent = 'Thinking...';
@@ -293,7 +294,15 @@ section.ask { padding: 10px 0 50px; }
     } catch (err) {
       askAnswer.textContent = 'Sorry, something went wrong.';
     }
+  }
+
+  askBtn.addEventListener('click', askQuestion);
+  askInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      askQuestion();
+    }
   });
+</script>
 </script>
 </body>
 </html>
